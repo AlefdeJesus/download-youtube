@@ -8,11 +8,11 @@ async function downloadVideo(videoUrl) {
     const info = await ytdl.getInfo(videoUrl);
     
     // Selecionando o formato com a maior qualidade (por resolução)
-    const format = ytdl.chooseFormat(info.formats, { quality: 'highestvideo' });
+    const format = ytdl.chooseFormat(info.formats, { quality: 'highestvideo', filter: 'videoandaudio' });
     console.log('Formato encontrado:', format);
 
     // Nome do arquivo baseado no título do vídeo
-    const title = info.videoDetails.title;
+    const title = info.videoDetails.title.replace(/[<>:"\/\\|?*]+/g, '');
     const output = `${title}.mp4`;
 
     // Baixando o vídeo e salvando no arquivo de saída
@@ -23,7 +23,7 @@ async function downloadVideo(videoUrl) {
       })
       .on('error', (err) => {
         console.error(`Erro durante o download: ${err.message}`);
-
+        fs.unlinkSync(output)
         //criar uma funçao para excluir video quando der erro durante download
       });
 
@@ -37,6 +37,6 @@ async function downloadVideo(videoUrl) {
 }
 
 // URL do vídeo que você quer baixar
-const videoUrl = 'https://www.youtube.com/watch?v=TyqdlyUpFW0&list=PL-R1FQNkywO55236fniVp6LKGAVZXcmnr&index=9';
+const videoUrl = 'https://www.youtube.com/watch?v=oh904_HdkwY';
 
 module.exports = {downloadVideo, videoUrl};
