@@ -1,6 +1,8 @@
 const fs = require('fs');
-const ytdl = require('ytdl-core');
+//const ytdl = require('ytdl-core');
 const path = require('path');
+const ytdl = require('@distube/ytdl-core');
+
 
 // Função para baixar o vídeo na maior resolução com o nome do YouTube
 async function downloadVideo(url) {
@@ -17,18 +19,18 @@ async function downloadVideo(url) {
 
     // Nome do arquivo baseado no título do vídeo, e removendo caracteres inválidos e emojis
     const title = info.videoDetails.title
-      .replace(/[<>:"\/\\|?*]+/g, '')
-      .replace(/[\u{1F600}-\u{1F64F}]/gu, '')  // Emoticons
-      .replace(/[\u{1F300}-\u{1F5FF}]/gu, '')  // Símbolos e pictogramas
-      .replace(/[\u{1F680}-\u{1F6FF}]/gu, '')  // Transporte e símbolos de mapa
-      .replace(/[\u{1F700}-\u{1F77F}]/gu, '')  // Símbolos diversos e pictogramas
-      .replace(/[\u{1F780}-\u{1F7FF}]/gu, '')  // Símbolos suplementares de pictogramas
-      .replace(/[\u{1F800}-\u{1F8FF}]/gu, '')  // Símbolos suplementares de flechas
-      .replace(/[\u{1F900}-\u{1F9FF}]/gu, '')  // Símbolos suplementares de emoticons
-      .replace(/[\u{1FA00}-\u{1FA6F}]/gu, '')  // Símbolos de atividades
-      .replace(/[\u{1FA70}-\u{1FAFF}]/gu, '')  // Símbolos de objetos
-      .replace(/[\u{2600}-\u{26FF}]/gu, '')    // Símbolos diversos
-      .replace(/[\u{2700}-\u{27BF}]/gu, '');   // Dingbats
+    .replace(/[<>:"\/\\|?*#]+/g, '') // Inclui a remoção do caractere #
+    .replace(/[\u{1F600}-\u{1F64F}]/gu, '')  // Emoticons
+    .replace(/[\u{1F300}-\u{1F5FF}]/gu, '')  // Símbolos e pictogramas
+    .replace(/[\u{1F680}-\u{1F6FF}]/gu, '')  // Transporte e símbolos de mapa
+    .replace(/[\u{1F700}-\u{1F77F}]/gu, '')  // Símbolos diversos e pictogramas
+    .replace(/[\u{1F780}-\u{1F7FF}]/gu, '')  // Símbolos suplementares de pictogramas
+    .replace(/[\u{1F800}-\u{1F8FF}]/gu, '')  // Símbolos suplementares de flechas
+    .replace(/[\u{1F900}-\u{1F9FF}]/gu, '')  // Símbolos suplementares de emoticons
+    .replace(/[\u{1FA00}-\u{1FA6F}]/gu, '')  // Símbolos de atividades
+    .replace(/[\u{1FA70}-\u{1FAFF}]/gu, '')  // Símbolos de objetos
+    .replace(/[\u{2600}-\u{26FF}]/gu, '')    // Símbolos diversos
+    .replace(/[\u{2700}-\u{27BF}]/gu, '');   // Dingbats
 
     const output = path.join(__dirname, 'videos', `${title}.mp4`);
 
@@ -43,6 +45,8 @@ async function downloadVideo(url) {
         .on('finish', () => {
           console.log(`Download concluído: ${output}`);
           resolve(output);  // Retorna o caminho completo do arquivo
+
+          
         })
         .on('error', (err) => {
           console.error(`Erro durante o download: ${err.message}`);
@@ -56,5 +60,5 @@ async function downloadVideo(url) {
     throw err;
   }
 }
-
+//downloadVideo('https://youtu.be/JtYZTbNHv0E?si=pKFT7hRIKpUQdKw7')
 module.exports = { downloadVideo };

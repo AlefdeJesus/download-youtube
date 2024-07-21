@@ -7,10 +7,7 @@ const app = express();
 app.use(express.json())
 
 app.use(cors( {
-  origin: '*',
-  methods: 'GET, POST, OPTIONS, PATCH, DELETE, PUT',
-  allowedHeaders: 'Content-Type, Authorization, Accept, X-Requested-With, credentials', // Certifique-se de incluir 'credentials'
-  credentials: true
+  origin:'*'
 }));
 
 app.post('/download', async (req, res) => {
@@ -36,13 +33,21 @@ app.post('/download', async (req, res) => {
 app.get('/videos/:filename', (req, res) => {
   const { filename } = req.params;
   const filePath = path.join(__dirname, 'videos', filename);
+  
 
-  res.download(filePath, (err) => {
-    if (err) {
-      console.error('Erro ao fornecer o vídeo:', err);
-      res.status(500).send('Erro ao fornecer o vídeo.');
-    }
-  });
+  try {
+    res.download(filePath, (err) => {
+        if (err) {
+            console.error('Erro ao fornecer o vídeo:', err);
+            if (!res.headersSent) {
+                res.status(500).send('Erro ao fornecer o vídeo.');
+            }
+        }
+    });
+} catch (error) {
+    console.error('Erro ao realizar download:', error);
+    res.status(500).send('Erro ao realizar download do vídeo.');
+}
 }); 
 //const videoUrl = 'https://youtu.be/DDJX_vor5N8?si=bo4zJJAf1eIdyCT7';
 //downloadVideo(videoUrl);
