@@ -7,8 +7,12 @@ const app = express();
 app.use(express.json())
 
 app.use(cors( {
-  origin:'*'
+  origin: '*',
+  methods: 'GET, POST, OPTIONS, PATCH, DELETE, PUT',
+  allowedHeaders: 'Content-Type, Authorization, Accept, X-Requested-With, credentials', // Certifique-se de incluir 'credentials'
+  credentials: true
 }));
+app.options('*', cors());
 
 app.post('/download', async (req, res) => {
   const { url } = req.body;

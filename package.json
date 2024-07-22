@@ -10,12 +10,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@distube/ytdl-core": "github:soya-daizu/ytdl-core#sig-patch",
     "cors": "^2.8.5",
+    "cron": "^3.1.7",
     "express": "^4.19.2",
     "nodemon": "^3.1.2",
     "youtube-dl-exec": "^3.0.6",
-    "ytdl-core": "^4.11.5",
-    "@distube/ytdl-core": "github:soya-daizu/ytdl-core#sig-patch"
-
+    "ytdl-core": "^4.11.5"
   }
 }
