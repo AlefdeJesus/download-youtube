@@ -28,8 +28,8 @@ const deleteOldVideos = () => {
                 const fileModifiedTime = new Date(stats.mtime).getTime();
                 const diffMinutes = (now - fileModifiedTime) / (1000 * 60);
 
-                // Se o arquivo foi modificado há mais de 2 minutos, apaga o arquivo
-                if (diffMinutes > 2) {
+                // Se o arquivo foi modificado há mais de 10 minutos, apaga o arquivo
+                if (diffMinutes > 10) {
                     fs.unlink(filePath, err => {
                         if (err) {
                             console.error('Erro ao apagar o arquivo:', err);

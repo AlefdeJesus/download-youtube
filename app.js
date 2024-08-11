@@ -1,5 +1,5 @@
 const express = require('express');
-const {downloadVideo} = require('./downloadVideo.js')
+const {downloadVideo, loadQuantidadeVideos} = require('./downloadVideo.js')
 const path = require('path')
 const cors = require('cors');
 
@@ -37,10 +37,13 @@ app.post('/download', async (req, res) => {
 app.get('/videos/:filename', (req, res) => {
   const { filename } = req.params;
   const filePath = path.join(__dirname, 'videos', filename);
+
+  const qualidade = loadQuantidadeVideos();
+ 
   
 
   try {
-    res.download(filePath, (err) => {
+    res.status(200).download(filePath, (err) => {
         if (err) {
             console.error('Erro ao fornecer o vídeo:', err);
             if (!res.headersSent) {

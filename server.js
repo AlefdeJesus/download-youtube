@@ -1,7 +1,7 @@
 const {app} = require('./app.js');
 const {job} = require('./deletarVideo.js');
 
-const port = 3000;
+const port = 3333;
 
 job.start();
 

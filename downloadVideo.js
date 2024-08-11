@@ -4,6 +4,24 @@ const path = require('path');
 const ytdl = require('@distube/ytdl-core');
 
 
+const dataFile = path.join(__dirname,"quantidade-videos.js");
+
+function loadQuantidadeVideos(){
+  if(fs.existsSync(dataFile)){
+    const data = fs.readFileSync(dataFile, 'utf-8');
+    return JSON.parse(data).quantidadeVideos
+    
+  }else{
+    return 0;
+  }
+};
+
+function saveQuantidadeVideos(quantidade){
+  const data = {quantidadeVideos: quantidade}
+  fs.writeFileSync(dataFile, JSON.stringify(data), 'utf-8');
+};
+
+
 // Função para baixar o vídeo na maior resolução com o nome do YouTube
 async function downloadVideo(url) {
   if (!url || typeof url !== 'string') {
@@ -44,6 +62,12 @@ async function downloadVideo(url) {
         .pipe(fs.createWriteStream(output))
         .on('finish', () => {
           console.log(`Download concluído: ${output}`);
+
+          let quantidade = loadQuantidadeVideos();
+          quantidade +=1;
+          saveQuantidadeVideos(quantidade)
+          console.log(`Quantidade de videos baixados: ${quantidade}`)
+
           resolve(output);  // Retorna o caminho completo do arquivo
 
           
@@ -61,4 +85,4 @@ async function downloadVideo(url) {
   }
 }
 //downloadVideo('https://youtu.be/JtYZTbNHv0E?si=pKFT7hRIKpUQdKw7')
-module.exports = { downloadVideo };
+module.exports = { downloadVideo, loadQuantidadeVideos };
