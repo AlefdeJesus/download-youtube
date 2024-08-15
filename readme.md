@@ -12,7 +12,7 @@ Passos para instalar e configurar o projeto:
 
 ```bash
 # Clone o repositório
-git clone https://github.com/usuario/nome-do-projeto.git
+git clone https://github.com/AlefdeJesus/download-youtube.git
 
 # Entre no diretório do projeto
 cd downtube
