@@ -39,24 +39,25 @@ async function downloadVideo(url) {
   }
 
   try {
-    const info = await ytdl.getInfo(url, { agent });
+    const headers = {
+      'Cookie': cookieData.trim(),
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
+      'Accept-Language': 'en-US,en;q=0.9',
+    };
+
+    const info = await ytdl.getInfo(url, {
+      requestOptions: {
+        headers,
+      },
+      agent,
+    });
 
     const format = ytdl.chooseFormat(info.formats, { quality: 'highestvideo', filter: 'videoandaudio' });
     console.log('Formato encontrado:', format);
 
     const title = info.videoDetails.title
-    .replace(/[<>:"\/\\|?*#]+/g, '')
-    .replace(/[\u{1F600}-\u{1F64F}]/gu, '')
-    .replace(/[\u{1F300}-\u{1F5FF}]/gu, '')
-    .replace(/[\u{1F680}-\u{1F6FF}]/gu, '')
-    .replace(/[\u{1F700}-\u{1F77F}]/gu, '')
-    .replace(/[\u{1F780}-\u{1F7FF}]/gu, '')
-    .replace(/[\u{1F800}-\u{1F8FF}]/gu, '')
-    .replace(/[\u{1F900}-\u{1F9FF}]/gu, '')
-    .replace(/[\u{1FA00}-\u{1FA6F}]/gu, '')
-    .replace(/[\u{1FA70}-\u{1FAFF}]/gu, '')
-    .replace(/[\u{2600}-\u{26FF}]/gu, '')
-    .replace(/[\u{2700}-\u{27BF}]/gu, '');
+      .replace(/[<>:"\/\\|?*#]+/g, '') // Remover caracteres inválidos
+      .replace(/[\u{1F600}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, ''); // Remover emojis e caracteres especiais
 
     const output = path.join(__dirname, 'videos', `${title}.mp4`);
 
@@ -65,7 +66,7 @@ async function downloadVideo(url) {
     }
 
     return new Promise((resolve, reject) => {
-      ytdl(url, { format, agent })
+      ytdl(url, { format, requestOptions: { headers }, agent })
         .pipe(fs.createWriteStream(output))
         .on('finish', () => {
           console.log(`Download concluído: ${output}`);
