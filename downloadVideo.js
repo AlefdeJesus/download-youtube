@@ -2,7 +2,20 @@ const fs = require('fs');
 const path = require('path');
 const ytdl = require('@distube/ytdl-core');
 
-const cookieData = fs.readFileSync('cookies.txt', 'utf-8');
+// Carregar cookies do arquivo cookies.txt
+let cookies = [];
+try {
+  const cookieData = JSON.parse(fs.readFileSync('cookies.txt', 'utf-8'));
+  cookies = cookieData.map(cookie => ({
+    name: cookie.name,
+    value: cookie.value
+  }));
+} catch (err) {
+  console.error("Erro ao carregar os cookies:", err.message);
+}
+
+// Criar o agente com os cookies
+const agent = ytdl.createAgent(cookies);
 
 const dataFile = path.join(__dirname, "quantidade-videos.js");
 
@@ -26,30 +39,24 @@ async function downloadVideo(url) {
   }
 
   try {
-    const info = await ytdl.getInfo(url, {
-      requestOptions: {
-        headers: {
-          'Cookie': cookieData.trim(), // Envia os cookies como cabeçalho HTTP
-        }
-      }
-    });
+    const info = await ytdl.getInfo(url, { agent });
 
     const format = ytdl.chooseFormat(info.formats, { quality: 'highestvideo', filter: 'videoandaudio' });
     console.log('Formato encontrado:', format);
 
     const title = info.videoDetails.title
-      .replace(/[<>:"\/\\|?*#]+/g, '')
-      .replace(/[\u{1F600}-\u{1F64F}]/gu, '')
-      .replace(/[\u{1F300}-\u{1F5FF}]/gu, '')
-      .replace(/[\u{1F680}-\u{1F6FF}]/gu, '')
-      .replace(/[\u{1F700}-\u{1F77F}]/gu, '')
-      .replace(/[\u{1F780}-\u{1F7FF}]/gu, '')
-      .replace(/[\u{1F800}-\u{1F8FF}]/gu, '')
-      .replace(/[\u{1F900}-\u{1F9FF}]/gu, '')
-      .replace(/[\u{1FA00}-\u{1FA6F}]/gu, '')
-      .replace(/[\u{1FA70}-\u{1FAFF}]/gu, '')
-      .replace(/[\u{2600}-\u{26FF}]/gu, '')
-      .replace(/[\u{2700}-\u{27BF}]/gu, '');
+    .replace(/[<>:"\/\\|?*#]+/g, '')
+    .replace(/[\u{1F600}-\u{1F64F}]/gu, '')
+    .replace(/[\u{1F300}-\u{1F5FF}]/gu, '')
+    .replace(/[\u{1F680}-\u{1F6FF}]/gu, '')
+    .replace(/[\u{1F700}-\u{1F77F}]/gu, '')
+    .replace(/[\u{1F780}-\u{1F7FF}]/gu, '')
+    .replace(/[\u{1F800}-\u{1F8FF}]/gu, '')
+    .replace(/[\u{1F900}-\u{1F9FF}]/gu, '')
+    .replace(/[\u{1FA00}-\u{1FA6F}]/gu, '')
+    .replace(/[\u{1FA70}-\u{1FAFF}]/gu, '')
+    .replace(/[\u{2600}-\u{26FF}]/gu, '')
+    .replace(/[\u{2700}-\u{27BF}]/gu, '');
 
     const output = path.join(__dirname, 'videos', `${title}.mp4`);
 
@@ -58,7 +65,7 @@ async function downloadVideo(url) {
     }
 
     return new Promise((resolve, reject) => {
-      ytdl(url, { format, requestOptions: { headers: { 'Cookie': cookieData.trim() } } })
+      ytdl(url, { format, agent })
         .pipe(fs.createWriteStream(output))
         .on('finish', () => {
           console.log(`Download concluído: ${output}`);
@@ -72,7 +79,9 @@ async function downloadVideo(url) {
         })
         .on('error', (err) => {
           console.error(`Erro durante o download: ${err.message}`);
-          fs.unlinkSync(output);
+          if (fs.existsSync(output)) {
+            fs.unlinkSync(output); // Remove o arquivo corrompido
+          }
           reject(err);
         });
     });
