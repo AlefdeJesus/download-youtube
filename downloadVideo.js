@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const ytdl = require('@distube/ytdl-core');
-const { Client } = require('undici');
+
+const cookieData = fs.readFileSync('cookies.txt', 'utf-8');
 
 const dataFile = path.join(__dirname, "quantidade-videos.js");
 
@@ -24,13 +25,11 @@ async function downloadVideo(url) {
     throw new Error('URL inválida!');
   }
 
-  const cookies = "HSID=AzQdg6LJ1lz9Bh07M; SSID=AtS_1kGYDOoVMnUv5; APISID=wZW1CyH8dzksSTMS/AxcU4DMNWW-p_1UXt; SAPISID=KhDV_IQrD-sFbRF0/AZz8KT373EN-f65F6; __Secure-1PAPISID=KhDV_IQrD-sFbRF0/AZz8KT373EN-f65F6; __Secure-3PAPISID=KhDV_IQrD-sFbRF0/AZz8KT373EN-f65F6; LOGIN_INFO=AFmmF2swRAIgARBE6B-Abi5JZVgi_A0u0Yr4DU_jvjbPHYs3QPe5enoCIEY6e-estaTboatqqYC2R9oPp0UbbblYB7dn1jKVtO3t:QUQ3MjNmd0kyUkVPY1hQSzhHRnlod0hYSFdsWmNmZmhMcTVHUVVQd3ktQnB5NXBZMW9QZ1NxTUxqbHBmX3RkRFcxaFE4djhELV9kOXFqdXZGdENTdU5uS240X2hWVk1kZXhGTnBYZ3VWcGdCeWttYkNHX0VESlZVVkY2cUYzQ0tldDlBcGlqejhtNktfLWFyZ21NdDl1RXpRSUwxZGlNcDNB; VISITOR_INFO1_LIVE=qCqXuY3kUqY; VISITOR_PRIVACY_METADATA=CgJCUhIEGgAgZA%3D%3D; SID=g.a000mAhSuNoNYCJtK1W5T6MRWkhVzyPLlSjLo2IkJLOX9clUp6cuvWAP8buxqJzhy9IDF-GKEQACgYKAb8SARESFQHGX2MiMzvr7aiOeIm3qRItIlQF2BoVAUF8yKq7ZotQ34B5TO4bFebr3lnv0076; __Secure-1PSID=g.a000mAhSuNoNYCJtK1W5T6MRWkhVzyPLlSjLo2IkJLOX9clUp6cuw7EXvt2Yg59pfQK9e5bZAgACgYKAWcSARESFQHGX2MiBXqgvKbi7mHyiEKcdEXNExoVAUF8yKpKAdbzULHvZ6WlIVhenXba0076; __Secure-3PSID=g.a000mAhSuNoNYCJtK1W5T6MRWkhVzyPLlSjLo2IkJLOX9clUp6cutZEWGxGTWEI9QsB5-vYjVwACgYKARsSARESFQHGX2MibbJ8yoXYUVdNpcIUyOaxOhoVAUF8yKoVO43UVBtg-f0w98WJjBu70076; PREF=tz=America.Fortaleza; YSC=tiyB8_iNUos; __Secure-1PSIDTS=sidts-CjIBUFGoh7lY0FNGUz25fOyVSxhFrC-SBkKEi4RbzDlLXD9uZBs-nhcHeFIZ56ubZaRzyRAA; __Secure-3PSIDTS=sidts-CjIBUFGoh7lY0FNGUz25fOyVSxhFrC-SBkKEi4RbzDlLXD9uZBs-nhcHeFIZ56ubZaRzyRAA; SIDCC=AKEyXzVG5zwxIeSPcyjxVTgaXhn-Q3ITpE8aKAIiINI4XcwNCRLq1m-Dd21SkbdBZ6eBlnI78rU; __Secure-1PSIDCC=AKEyXzVCebeTCQdcOAlHKFg96L-KV_LxsxQ9VyRIOwvsHK1FDYKffjto2kjIlyueSNJ8PVZFGo0; __Secure-3PSIDCC=AKEyXzUQiaa-aDzVA4yn9JmZEtvaMzTzHTQGyb2f5MD7ASh9M03YJikBaZagsAaUkw5MLgjtDA";
-
   try {
     const info = await ytdl.getInfo(url, {
       requestOptions: {
         headers: {
-          'Cookie': cookies
+          'Cookie': cookieData.trim(), // Envia os cookies como cabeçalho HTTP
         }
       }
     });
@@ -59,7 +58,7 @@ async function downloadVideo(url) {
     }
 
     return new Promise((resolve, reject) => {
-      ytdl(url, { format: format })
+      ytdl(url, { format, requestOptions: { headers: { 'Cookie': cookieData.trim() } } })
         .pipe(fs.createWriteStream(output))
         .on('finish', () => {
           console.log(`Download concluído: ${output}`);
@@ -67,7 +66,7 @@ async function downloadVideo(url) {
           let quantidade = loadQuantidadeVideos();
           quantidade += 1;
           saveQuantidadeVideos(quantidade);
-          console.log(`Quantidade de videos baixados: ${quantidade}`);
+          console.log(`Quantidade de vídeos baixados: ${quantidade}`);
 
           resolve(output);
         })
