@@ -3,19 +3,12 @@ const path = require('path');
 const ytdl = require('@distube/ytdl-core');
 
 // Carregar cookies do arquivo cookies.txt
-let cookies = [];
+let cookies = '';
 try {
-  const cookieData = JSON.parse(fs.readFileSync('cookies.txt', 'utf-8'));
-  cookies = cookieData.map(cookie => ({
-    name: cookie.name,
-    value: cookie.value
-  }));
+  cookies = fs.readFileSync('cookies.txt', 'utf-8').trim();
 } catch (err) {
   console.error("Erro ao carregar os cookies:", err.message);
 }
-
-// Criar o agente com os cookies
-const agent = ytdl.createAgent(cookies);
 
 const dataFile = path.join(__dirname, "quantidade-videos.js");
 
@@ -40,7 +33,7 @@ async function downloadVideo(url) {
 
   try {
     const headers = {
-      'Cookie': cookieData.trim(),
+      'Cookie': cookies,
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
       'Accept-Language': 'en-US,en;q=0.9',
     };
@@ -48,8 +41,7 @@ async function downloadVideo(url) {
     const info = await ytdl.getInfo(url, {
       requestOptions: {
         headers,
-      },
-      agent,
+      }
     });
 
     const format = ytdl.chooseFormat(info.formats, { quality: 'highestvideo', filter: 'videoandaudio' });
@@ -66,7 +58,7 @@ async function downloadVideo(url) {
     }
 
     return new Promise((resolve, reject) => {
-      ytdl(url, { format, requestOptions: { headers }, agent })
+      ytdl(url, { format, requestOptions: { headers } })
         .pipe(fs.createWriteStream(output))
         .on('finish', () => {
           console.log(`Download concluído: ${output}`);
