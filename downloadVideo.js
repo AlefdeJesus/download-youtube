@@ -4,106 +4,15 @@ const ytdl = require('@distube/ytdl-core');
 
 // Definir os cookies diretamente no código
 const cookies = [
-  [
-    {
-        "domain": ".youtube.com",
-        "expirationDate": 1762304418.087457,
-        "hostOnly": false,
-        "httpOnly": true,
-        "name": "__Secure-1PSIDTS",
-        "path": "/",
-        "sameSite": "unspecified",
-        "secure": true,
-        "session": false,
-        "storeId": "0",
-        "value": "sidts-CjEBQT4rX9qLAXE_ibmNsz7gqSJO5Ue0yS_-fLvjSC7gBxaMc8Ld8b0p90UdWiJ3jNzmEAA",
-        "id": 1
-    },
-    {
-        "domain": ".youtube.com",
-        "expirationDate": 1760990567.035603,
-        "hostOnly": false,
-        "httpOnly": false,
-        "name": "__Secure-3PAPISID",
-        "path": "/",
-        "sameSite": "no_restriction",
-        "secure": true,
-        "session": false,
-        "storeId": "0",
-        "value": "A8CK1MgF8g0irnZz/A3QIDW_f_D9pEToJs",
-        "id": 2
-    },
-    {
-        "domain": ".youtube.com",
-        "expirationDate": 1760990567.035671,
-        "hostOnly": false,
-        "httpOnly": true,
-        "name": "__Secure-3PSID",
-        "path": "/",
-        "sameSite": "no_restriction",
-        "secure": true,
-        "session": false,
-        "storeId": "0",
-        "value": "g.a000nghNALlnXJ_dVSVLWbMw7db6hKumq8zGlyfoK52XsgBJrV9AvNptmR9Tp5GKBbM9CCICsQACgYKAaASARISFQHGX2MixAaxnJx3MDi1Ayi1dl3LKBoVAUF8yKqzKMyawmQWYoB5oEelttGB0076",
-        "id": 3
-    },
-    {
-        "domain": ".youtube.com",
-        "expirationDate": 1762304638.567422,
-        "hostOnly": false,
-        "httpOnly": true,
-        "name": "__Secure-3PSIDCC",
-        "path": "/",
-        "sameSite": "no_restriction",
-        "secure": true,
-        "session": false,
-        "storeId": "0",
-        "value": "AKEyXzVaTFcwkqaHIQpOcY-HPTtYZvERPUHkNN11JkW-YnbvY_IQVw9A_oGj7hJEn2zKGu1jgak",
-        "id": 4
-    },
-    {
-        "domain": ".youtube.com",
-        "expirationDate": 1762304418.087559,
-        "hostOnly": false,
-        "httpOnly": true,
-        "name": "__Secure-3PSIDTS",
-        "path": "/",
-        "sameSite": "no_restriction",
-        "secure": true,
-        "session": false,
-        "storeId": "0",
-        "value": "sidts-CjEBQT4rX9qLAXE_ibmNsz7gqSJO5Ue0yS_-fLvjSC7gBxaMc8Ld8b0p90UdWiJ3jNzmEAA",
-        "id": 5
-    },
-    {
-        "domain": ".youtube.com",
-        "expirationDate": 1758976288.988094,
-        "hostOnly": false,
-        "httpOnly": true,
-        "name": "LOGIN_INFO",
-        "path": "/",
-        "sameSite": "no_restriction",
-        "secure": true,
-        "session": false,
-        "storeId": "0",
-        "value": "AFmmF2swRgIhAIof808vDUjhbNrGQLT5ik7IgAAG_8xHGnfBzI9c_d65AiEAmM3BTT_OhgxUN-KZkktqI9TPa5sECB_mPRNpr13tVIc:QUQ3MjNmeXBlc1Q5Y2FXVXg5QzdFVUV4OEotTGhURFBqd0paWGR1ano2clB0LTUxajlXU2UxR2NDTDhEY0NuTmtxbkpZZWNWTTFGNjFQODEzdUlYdGtUWHVkRTZhbUF4VWtuTXVteDZlYWMwMmw4d3BRdHBGRGNvVEhvX2ZTT2stTXRvVHEzMm5OMmYzY05NT2R2UmpWOXJSX3VOWUdjdHJB",
-        "id": 6
-    },
-    {
-        "domain": ".youtube.com",
-        "expirationDate": 1765328487.099531,
-        "hostOnly": false,
-        "httpOnly": false,
-        "name": "PREF",
-        "path": "/",
-        "sameSite": "unspecified",
-        "secure": true,
-        "session": false,
-        "storeId": "0",
-        "value": "tz=America.Cayenne&f7=100",
-        "id": 7
-    }
-    ]
+  "__Secure-1PSIDTS=sidts-CjEBQT4rX9qLAXE_ibmNsz7gqSJO5Ue0yS_-fLvjSC7gBxaMc8Ld8b0p90UdWiJ3jNzmEAA",
+  "__Secure-3PAPISID=A8CK1MgF8g0irnZz/A3QIDW_f_D9pEToJs",
+  "__Secure-3PSID=g.a000nghNALlnXJ_dVSVLWbMw7db6hKumq8zGlyfoK52XsgBJrV9AvNptmR9Tp5GKBbM9CCICsQACgYKAaASARISFQHGX2MixAaxnJx3MDi1Ayi1dl3LKBoVAUF8yKqzKMyawmQWYoB5oEelttGB0076",
+  "__Secure-3PSIDCC=AKEyXzW_7G6PK-hOPPOKmIYFtZc9WJN1bX5W9dkIGkZgR1u5mXYZtTfMWtcAc98jtmodQckC-TI",
+  "__Secure-3PSIDTS=sidts-CjEBQT4rX9qLAXE_ibmNsz7gqSJO5Ue0yS_-fLvjSC7gBxaMc8Ld8b0p90UdWiJ3jNzmEAA",
+  "LOGIN_INFO=AFmmF2swRgIhAIof808vDUjhbNrGQLT5ik7IgAAG_8xHGnfBzI9c_d65AiEAmM3BTT_OhgxUN-KZkktqI9TPa5sECB_mPRNpr13tVIc:QUQ3MjNmeXBlc1Q5Y2FXVXg5QzdFVUV4OEotTGhURFBqd0paWGR1ano2clB0LTUxajlXU2UxR2NDTDhEY0NuTmtxbkpZZWNWTTFGNjFQODEzdUlYdGtUWHVkRTZhbUF4VWtuTXVteDZlYWMwMmw4d3BRdHBGRGNvVEhvX2ZTT2stTXRvVHEzMm5OMmYzY05NT2R2UmpWOXJSX3VOWUdjdHJB",
+  "PREF=tz=America.Cayenne&f7=100",
+  "ST-xuwub9=session_logininfo=AFmmF2swRgIhAIof808vDUjhbNrGQLT5ik7IgAAG_8xHGnfBzI9c_d65AiEAmM3BTT_OhgxUN-KZkktqI9TPa5sECB_mPRNpr13tVIc%3AQUQ3MjNmeXBlc1Q5Y2FXVXg5QzdFVUV4OEotTGhURFBqd0paWGR1ano2clB0LTUxajlXU2UxR2NDTDhEY0NuTmtxbkpZZWNWTTFGNjFQODEzdUlYdGtUWHVkRTZhbUF4VWtuTXVteDZlYWMwMmw4d3BRdHBGRGNvVEhvX2ZTT2stTXRvVHEzMm5OMmYzY05NT2R2UmpWOXJSX3VOWUdjdHJB"
+
 ].join('; ');
 
 const dataFile = path.join(__dirname, "quantidade-videos.js");
