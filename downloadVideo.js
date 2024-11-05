@@ -2,17 +2,16 @@ const fs = require('fs');
 const path = require('path');
 const ytdl = require('@distube/ytdl-core');
 
-// Carregar cookies do arquivo cookies.json
-let cookies = [];
+// Carregar cookies do arquivo cookies.txt
+let cookies = '';
 try {
-  cookies = JSON.parse(fs.readFileSync('cookies.json', 'utf-8'));
+  cookies = fs.readFileSync('cookies.txt', 'utf-8').trim();
 } catch (err) {
   console.error("Erro ao carregar os cookies:", err.message);
 }
 
 const dataFile = path.join(__dirname, "quantidade-videos.js");
 
-// Função para carregar a quantidade de vídeos
 function loadQuantidadeVideos() {
   if (fs.existsSync(dataFile)) {
     const data = fs.readFileSync(dataFile, 'utf-8');
@@ -22,14 +21,10 @@ function loadQuantidadeVideos() {
   }
 }
 
-// Função para salvar a quantidade de vídeos
 function saveQuantidadeVideos(quantidade) {
   const data = { quantidadeVideos: quantidade };
   fs.writeFileSync(dataFile, JSON.stringify(data), 'utf-8');
 }
-
-// Criar o agente com cookies
-const agent = ytdl.createAgent(cookies);
 
 async function downloadVideo(url) {
   if (!url || typeof url !== 'string') {
@@ -37,7 +32,17 @@ async function downloadVideo(url) {
   }
 
   try {
-    const info = await ytdl.getInfo(url, { agent });
+    const headers = {
+      'Cookie': cookies,
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
+      'Accept-Language': 'en-US,en;q=0.9',
+    };
+
+    const info = await ytdl.getInfo(url, {
+      requestOptions: {
+        headers,
+      }
+    });
 
     const format = ytdl.chooseFormat(info.formats, { quality: 'highestvideo', filter: 'videoandaudio' });
     console.log('Formato encontrado:', format);
@@ -53,7 +58,7 @@ async function downloadVideo(url) {
     }
 
     return new Promise((resolve, reject) => {
-      ytdl(url, { format, agent })
+      ytdl(url, { format, requestOptions: { headers } })
         .pipe(fs.createWriteStream(output))
         .on('finish', () => {
           console.log(`Download concluído: ${output}`);
