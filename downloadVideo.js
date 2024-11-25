@@ -9,10 +9,7 @@ const cookies = [
   "__Secure-3PSID=g.a000nghNALlnXJ_dVSVLWbMw7db6hKumq8zGlyfoK52XsgBJrV9AvNptmR9Tp5GKBbM9CCICsQACgYKAaASARISFQHGX2MixAaxnJx3MDi1Ayi1dl3LKBoVAUF8yKqzKMyawmQWYoB5oEelttGB0076",
   "__Secure-3PSIDCC=AKEyXzW_7G6PK-hOPPOKmIYFtZc9WJN1bX5W9dkIGkZgR1u5mXYZtTfMWtcAc98jtmodQckC-TI",
   "__Secure-3PSIDTS=sidts-CjEBQT4rX9qLAXE_ibmNsz7gqSJO5Ue0yS_-fLvjSC7gBxaMc8Ld8b0p90UdWiJ3jNzmEAA",
-  "LOGIN_INFO=AFmmF2swRgIhAIof808vDUjhbNrGQLT5ik7IgAAG_8xHGnfBzI9c_d65AiEAmM3BTT_OhgxUN-KZkktqI9TPa5sECB_mPRNpr13tVIc:QUQ3MjNmeXBlc1Q5Y2FXVXg5QzdFVUV4OEotTGhURFBqd0paWGR1ano2clB0LTUxajlXU2UxR2NDTDhEY0NuTmtxbkpZZWNWTTFGNjFQODEzdUlYdGtUWHVkRTZhbUF4VWtuTXVteDZlYWMwMmw4d3BRdHBGRGNvVEhvX2ZTT2stTXRvVHEzMm5OMmYzY05NT2R2UmpWOXJSX3VOWUdjdHJB",
-  "PREF=tz=America.Cayenne&f7=100",
-  "ST-xuwub9=session_logininfo=AFmmF2swRgIhAIof808vDUjhbNrGQLT5ik7IgAAG_8xHGnfBzI9c_d65AiEAmM3BTT_OhgxUN-KZkktqI9TPa5sECB_mPRNpr13tVIc%3AQUQ3MjNmeXBlc1Q5Y2FXVXg5QzdFVUV4OEotTGhURFBqd0paWGR1ano2clB0LTUxajlXU2UxR2NDTDhEY0NuTmtxbkpZZWNWTTFGNjFQODEzdUlYdGtUWHVkRTZhbUF4VWtuTXVteDZlYWMwMmw4d3BRdHBGRGNvVEhvX2ZTT2stTXRvVHEzMm5OMmYzY05NT2R2UmpWOXJSX3VOWUdjdHJB"
-
+  "LOGIN_INFO=AFmmF2swRgIhAIof808vDUjhbNrGQLT5ik7IgAAG_8xHGnfBzI9c_d65AiEAmM3BTT_OhgxUN-KZkktqI9TPa5sECB_mPRNpr13tVIc:QUQ3MjNmeXBlc1Q5Y2FXVXg5QzdFVUV4OEotTGhURFBqd0paWGR1ano2clB0LTUxajlXU2UxR2NDTDhEY0NuTmtxbkpZZWNWTTFGNjFQODEzdUlYdGtUWHVkRTZhbUF4VWtuTXVteDZlYWMwMmw4d3BRdHBGRGNvVEhvX2ZTT2stTXRvVHEzMm5OMmYzY05NT2R2UmpWOXJSX3VOWUdjdHJB"
 ].join('; ');
 
 const dataFile = path.join(__dirname, "quantidade-videos.js");
@@ -43,13 +40,18 @@ async function downloadVideo(url) {
       'Accept-Language': 'en-US,en;q=0.9',
     };
 
+    console.log('Cabeçalhos da solicitação--------:', headers); // Adicione este log para verificar os cabeçalhos
+
     const info = await ytdl.getInfo(url, {
       requestOptions: {
         headers,
       }
     });
 
-    const format = ytdl.chooseFormat(info.formats, { quality: 'highestvideo', filter: 'videoandaudio' });
+    let format = ytdl.chooseFormat(info.formats, { quality: 'highestvideo', filter: 'videoandaudio' });
+    if (!format) {
+      format = ytdl.chooseFormat(info.formats, { quality: 'highest', filter: 'videoandaudio' });
+    }
     console.log('Formato encontrado:', format);
 
     const title = info.videoDetails.title
