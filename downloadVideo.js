@@ -12,9 +12,6 @@ const cookies = [
   { name: "LOGIN_INFO", value: "AFmmF2swRgIhAIof808vDUjhbNrGQLT5ik7IgAAG_8xHGnfBzI9c_d65AiEAmM3BTT_OhgxUN-KZkktqI9TPa5sECB_mPRNpr13tVIc:QUQ3MjNmeXBlc1Q5Y2FXVXg5QzdFVUV4OEotTGhURFBqd0paWGR1ano2clB0LTUxajlXU2UxR2NDTDhEY0NuTmtxbkpZZWNWTTFGNjFQODEzdUlYdGtUWHVkRTZhbUF4VWtuTXVteDZlYWMwMmw4d3BRdHBGRGNvVEhvX2ZTT2stTXRvVHEzMm5OMmYzY05NT2R2UmpWOXJSX3VOWUdjdHJB" }
 ];
 
-// Criar o agente com os cookies
-const agent = ytdl.createAgent(cookies);
-
 const dataFile = path.join(__dirname, "quantidade-videos.js");
 
 function loadQuantidadeVideos() {
@@ -47,7 +44,7 @@ async function downloadVideo(url) {
     const info = await ytdl.getInfo(url, {
       requestOptions: {
         headers,
-        agent,
+        cookies,
       }
     });
 
@@ -68,7 +65,7 @@ async function downloadVideo(url) {
     }
 
     return new Promise((resolve, reject) => {
-      ytdl(url, { format, requestOptions: { headers, agent } })
+      ytdl(url, { format, requestOptions: { headers, cookies } })
         .pipe(fs.createWriteStream(output))
         .on('finish', () => {
           console.log(`Download concluído: ${output}`);
