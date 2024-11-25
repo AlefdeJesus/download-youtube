@@ -40,7 +40,7 @@ async function downloadVideo(url) {
       'Accept-Language': 'en-US,en;q=0.9',
     };
 
-    console.log('Cabeçalhos da solicitação--------:', headers); // Adicione este log para verificar os cabeçalhos
+    console.log('Cabeçalhos da solicitação:', headers); // Adicione este log para verificar os cabeçalhos
 
     const info = await ytdl.getInfo(url, {
       requestOptions: {
