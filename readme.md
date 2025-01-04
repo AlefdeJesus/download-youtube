@@ -1,3 +1,7 @@
+## COMANDO PARA IGNORAR PYTHON QUANDO DER ERRO NA INSTALAÇÃO.
+set YOUTUBE_DL_SKIP_PYTHON_CHECK=1 && npm install @distube/ytdl-core@latest
+
+
 # DownTube Back-end
 
 # Link do front-end
